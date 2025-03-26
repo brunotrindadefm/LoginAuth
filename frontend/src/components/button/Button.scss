@@ -1,0 +1,12 @@
+@use '../../styles/mixins.scss';
+
+.btn {
+    @include mixins.flex-center;
+    width: 95%;
+    padding: .7rem;
+    border-radius: 1.5rem;
+    background-color: black;
+    color: #ffffff;
+    cursor: pointer;
+    margin: 1rem 0 .5rem 0;
+}

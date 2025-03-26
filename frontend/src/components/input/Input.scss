@@ -1,0 +1,11 @@
+input {
+    width: 100%;
+    padding: .2rem;
+    border: none;
+    outline: none;
+
+    &::placeholder {
+        color: #dddddd;
+        font-size: 1rem;
+    }
+}
