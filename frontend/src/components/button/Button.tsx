@@ -1,8 +1,9 @@
 import './Button.scss'
+import { IButtonProps } from './IButtonProps'
 
-const Button = () => {
+const Button: React.FC<IButtonProps> = ({buttonText}) => {
     return (
-        <button className="btn">Entrar</button>
+        <button className="btn">{buttonText}</button>
     )
 }
 

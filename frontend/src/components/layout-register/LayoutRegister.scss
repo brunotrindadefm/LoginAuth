@@ -1,6 +1,6 @@
 @use '../../styles/mixins.scss';
 
-.layout-login {
+.layout-register {
     @include mixins.flex-center;
     flex-direction: column;
     width: 320px;
@@ -10,9 +10,9 @@
     padding: 1.2rem 1.7rem 2.5rem 1.7rem;
     box-shadow: 1px 4px 8px rgba(136, 136, 136, 0.562);
 
-    .login-header{
+    .register-header{
         @include mixins.flex-center;
-        margin: 0 1rem 1.5rem 0;
+        margin: 0 1rem 1rem 0;
     }
 
     h2 {
@@ -38,7 +38,7 @@
         }
     }
 
-    .register {
+    .login {
         cursor: pointer;
    }
 }
