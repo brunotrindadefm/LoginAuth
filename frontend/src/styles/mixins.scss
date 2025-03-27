@@ -1,3 +1,5 @@
+@use './variables.scss';
+
 @mixin flex-center {
     display: flex;
     justify-content: center;
@@ -7,11 +9,11 @@
 @mixin container-login-register {
     flex-direction: column;
     width: 350px;
-    background-color: #ffffff;
-    color: black;
+    background-color: variables.$ice-white;
+    color:  variables.$coal-black;
     border-radius: 2rem;
     padding: 1.2rem 1.7rem 2.5rem 1.7rem;
-    box-shadow: 1px 4px 8px rgba(136, 136, 136, 0.562);
+    box-shadow: 1px 4px 8px variables.$dark-grey;
 
     @media (max-width: 500px) {
         width: 90%;
@@ -28,6 +30,13 @@
 @mixin div-input {
     display: flex;
     width: 90%;
-    border-bottom: .1rem solid #a9a9a9;
+    border-bottom: .1rem solid variables.$light-grey;
     padding-bottom: .5rem;
+}
+
+@mixin login-text-title {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-left: .2rem;
+    margin-top: .4rem;
 }

@@ -8,6 +8,7 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { ILayoutRegisterProps } from './ILayoutRegisterProps';
 import { MdOutlineEmail } from "react-icons/md";
 import { motion } from "framer-motion";
+import theme from '../../styles/theme';
 
 const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) => {
 
@@ -27,7 +28,7 @@ const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) =>
                 className="layout-register"
             >
                 <header className='register-header'>
-                    <BiAperture size={60} color='#ffa500' />
+                    <BiAperture size={60} color={theme.primaryColor} />
                     <h1>BTAuth</h1>
                 </header>
                 <h2>Register</h2>

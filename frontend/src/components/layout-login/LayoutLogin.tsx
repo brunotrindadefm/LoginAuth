@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { ILayoutLoginProps } from './ILayoutLoginProps';
 import { motion } from 'framer-motion';
+import theme from '../../styles/theme';
 
 const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
 
@@ -23,7 +24,7 @@ const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
             className="layout-login"
         >
             <header className='login-header'>
-                <BiAperture size={60} color='#ffa500' />
+                <BiAperture size={60} color={theme.primaryColor} />
                 <h1>BTAuth</h1>
             </header>
             <h2>Login</h2>
