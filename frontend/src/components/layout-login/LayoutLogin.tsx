@@ -23,7 +23,7 @@ const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
             className="layout-login"
         >
             <header className='login-header'>
-                <BiAperture size={60} color='red' />
+                <BiAperture size={60} color='#ffa500' />
                 <h1>BTAuth</h1>
             </header>
             <h2>Login</h2>

@@ -5,8 +5,15 @@
     width: 95%;
     padding: .7rem;
     border-radius: 1.5rem;
-    background-color: black;
+    background-color: #ffa500;
     color: #ffffff;
     cursor: pointer;
-    margin: 1rem 0 .5rem 0;
+    margin: 1.3rem 0 .5rem 0;
+    font-size: 1rem;
+    border: none;
+    transition: .3s ease;
+
+    &:hover {
+        background-color: #ff8c00;
+    }
 }

@@ -27,7 +27,7 @@ const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) =>
                 className="layout-register"
             >
                 <header className='register-header'>
-                    <BiAperture size={80} color='red' />
+                    <BiAperture size={60} color='#ffa500' />
                     <h1>BTAuth</h1>
                 </header>
                 <h2>Register</h2>
