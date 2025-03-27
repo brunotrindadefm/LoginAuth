@@ -2,17 +2,18 @@
 
 .layout-register {
     @include mixins.flex-center;
-    flex-direction: column;
-    width: 320px;
-    background-color: #ffffff;
-    color: black;
-    border-radius: 2rem;
-    padding: 1.2rem 1.7rem 2.5rem 1.7rem;
-    box-shadow: 1px 4px 8px rgba(136, 136, 136, 0.562);
+    @include mixins.container-login-register;
 
-    .register-header{
+    .register-header {
         @include mixins.flex-center;
-        margin: 0 1rem 1rem 0;
+        margin: 0 1rem 1.5rem 0;
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-left: .2rem;
+            margin-top: .4rem;
+        }
     }
 
     h2 {
@@ -21,16 +22,10 @@
 
     .container-input {
         @include mixins.flex-center;
-        flex-direction: column;
-        width: 100%;
-        margin: 2rem 0 1rem 0;
-        gap: 2rem;
+        @include mixins.container-input;
 
         div {
-            display: flex;
-            width: 87%;
-            border-bottom: .1rem solid #a9a9a9;
-            padding-bottom: .5rem;
+            @include mixins.div-input;
 
             span {
                 cursor: pointer;
@@ -39,6 +34,7 @@
     }
 
     .login {
+        margin-top: .2rem;
         cursor: pointer;
-   }
+    }
 }

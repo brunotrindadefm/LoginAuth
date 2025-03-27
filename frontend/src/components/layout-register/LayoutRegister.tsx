@@ -23,7 +23,7 @@ const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) =>
                 initial={{ opacity: 0, scale: 0.9, height: "auto" }}
                 animate={{ opacity: 1, scale: 1, height: "auto" }}
                 exit={{ opacity: 0, scale: 0.9, height: "auto" }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="layout-register"
             >
                 <header className='register-header'>
