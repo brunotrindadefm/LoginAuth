@@ -18,25 +18,20 @@ public class LoginAuthApplication {
         };
 
         public static void main(String[] args) {
-
                 try {
-                        Dotenv dotenv = Dotenv.configure().directory("./").ignoreIfMissing().load();
-
-                        ConfigurableApplicationContext context = SpringApplication.run(LoginAuthApplication.class,
-                                        args);
-                        ConfigurableEnvironment env = context.getEnvironment();
+                        Dotenv dotenv = Dotenv.configure().load();
 
                         for (String var : REQUIRED_ENV_VARS) {
                                 String value = dotenv.get(var);
                                 if (value == null) {
                                         throw new IllegalStateException("Variável faltando no .env: " + var);
                                 }
-                                env.getPropertySources().addFirst(
-                                                new MapPropertySource("dotenv", Map.of(var, value)));
+                                System.setProperty(var, value);
                         }
+
+                        SpringApplication.run(LoginAuthApplication.class, args);
                 } catch (Exception exception) {
-                        System.out.println("Error at system initialization");
-                        System.exit(1);
+                        exception.printStackTrace();
                 }
         }
 
