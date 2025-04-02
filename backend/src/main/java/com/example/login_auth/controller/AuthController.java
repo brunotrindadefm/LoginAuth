@@ -39,7 +39,7 @@ public class AuthController {
         if (!passwordEncoder.matches(body.password(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
-        
+
         String token = this.tokenService.generateToken(user);
         return ResponseEntity.ok(new ResponseDto(user, token));
     }
@@ -48,16 +48,17 @@ public class AuthController {
     public ResponseEntity register(@RequestBody RegisterRequestDto body) {
         Optional<User> user = this.userRepository.findByEmail(body.email());
 
-        if (user.isEmpty()) {
-            User newUser = new User();
-            newUser.setPassword(passwordEncoder.encode(body.password()));
-            newUser.setEmail(body.email());
-            newUser.setName(body.name());
-            this.userRepository.save(newUser);
-
-            String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDto(newUser, token));
+        if (user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already registered");
         }
-        return ResponseEntity.badRequest().build();
+
+        User newUser = new User();
+        newUser.setPassword(passwordEncoder.encode(body.password()));
+        newUser.setEmail(body.email());
+        newUser.setName(body.name());
+        this.userRepository.save(newUser);
+
+        String token = this.tokenService.generateToken(newUser);
+        return ResponseEntity.ok(new ResponseDto(newUser, token));
     }
 }

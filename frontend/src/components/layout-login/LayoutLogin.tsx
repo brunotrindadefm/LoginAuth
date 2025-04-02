@@ -5,15 +5,36 @@ import { BiAperture } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import { ILayoutLoginProps } from './ILayoutLoginProps';
+import { ILayoutLoginProps } from '../../interfaces/Ilayouts/ILayoutLoginProps';
 import { motion } from 'framer-motion';
 import theme from '../../styles/theme';
+import axios from 'axios';
 
 const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
 
-    const [username, setUsername] = useState<string>('');
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post(`${API_URL}/auth/login`, { email, password }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(response);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.log(error.response?.data?.message || 'Erro ao fazer login');
+            } else {
+                console.log('Erro desconhecido');
+            }
+        }
+    }
+
 
     return (
         <motion.div
@@ -30,7 +51,7 @@ const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
             <h2>Login</h2>
             <div className='container-input'>
                 <div>
-                    <Input type='text' placeholder='Username' onChangeValue={setUsername} />
+                    <Input type='text' placeholder='Username' onChangeValue={setEmail} />
                     <FaRegUser size={20} />
                 </div>
                 <div>
@@ -44,7 +65,7 @@ const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
                     </span>
                 </div>
             </div>
-            <Button buttonText='Login' />
+            <Button buttonText='Login' onClick={handleLogin} />
             <span className='register' onClick={onToggleRegister}>Register</span>
         </motion.div>
     );

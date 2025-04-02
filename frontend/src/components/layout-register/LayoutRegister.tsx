@@ -5,18 +5,39 @@ import { BiAperture } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import { ILayoutRegisterProps } from './ILayoutRegisterProps';
+import { ILayoutRegisterProps } from '../../interfaces/Ilayouts/ILayoutRegisterProps';
 import { MdOutlineEmail } from "react-icons/md";
 import { motion } from "framer-motion";
 import theme from '../../styles/theme';
+import axios from 'axios';
 
 const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) => {
+
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const handleRegister = async () => {
+        if (password !== confirmPassword) {
+            console.log("Passwords do not match");
+            return;
+        }
+        try {
+            const response = await axios.post(`${API_URL}/auth/register`, { name: username, email, password }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <>
@@ -52,9 +73,9 @@ const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) =>
                         </span>
                     </div>
                     <div>
-                        <Input type={showPassword ? 'text' : 'password'} placeholder='Confirm Password' onChangeValue={setConfirmPassword} />
-                        <span onClick={() => setShowPassword(!showPassword)}>
-                            {showPassword ?
+                        <Input type={showConfirmPassword ? 'text' : 'password'} placeholder='Confirm Password' onChangeValue={setConfirmPassword} />
+                        <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                            {showConfirmPassword ?
                                 <IoEyeOutline size={21} />
                                 :
                                 <IoEyeOffOutline size={21} />
@@ -62,7 +83,7 @@ const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) =>
                         </span>
                     </div>
                 </div>
-                <Button buttonText='Register' />
+                <Button buttonText='Register' onClick={handleRegister} />
                 <span className='login' onClick={onToggleRegister}>Login</span>
             </motion.div>
         </>

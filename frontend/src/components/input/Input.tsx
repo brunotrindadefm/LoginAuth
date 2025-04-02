@@ -1,5 +1,5 @@
 import './Input.scss'
-import { IInputProps } from './IInputProps';
+import { IInputProps } from '../../interfaces/Iinput/IInputProps';
 
 const Input = ({type, placeholder, onChangeValue}: IInputProps) => {
 
