@@ -16,36 +16,38 @@ import com.example.login_auth.domain.user.User;
 
 @Service
 public class TokenService {
-
     @Value("${api.security.token.secret}")
     private String secret;
 
     public String generateToken(User user) {
         try {
-            // passando a secret como se fosse uma 'chave', para apenas quem tem acesso a
-            // secret conseguir criptografar e descriptografar o token
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            String token = JWT.create().withIssuer("login-auth-api").withSubject(user.getEmail())
-                    .withExpiresAt(this.generateTokenExpirationDate())
+            String token = JWT.create()
+                    .withIssuer("login-auth-api")
+                    .withSubject(user.getEmail())
+                    .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
-
             return token;
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro while authenticating");
+            throw new RuntimeException("Error while authenticating");
         }
     }
 
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm).withIssuer("login-auth-api").build().verify(token).getSubject();
+            return JWT.require(algorithm)
+                    .withIssuer("login-auth-api")
+                    .build()
+                    .verify(token)
+                    .getSubject();
         } catch (JWTVerificationException exception) {
             return null;
         }
     }
 
-    private Instant generateTokenExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-3"));
+    private Instant generateExpirationDate() {
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

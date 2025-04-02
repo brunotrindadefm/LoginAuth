@@ -1,14 +1,16 @@
 package com.example.login_auth.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
+@RequestMapping("/user")
 public class UserController {
 
-    public ResponseEntity<String> getUser() {
-        return ResponseEntity.ok("Sucesso!");
+   @GetMapping
+    public ResponseEntity<String> getUser(){
+        return ResponseEntity.ok("sucesso!");
     }
 }

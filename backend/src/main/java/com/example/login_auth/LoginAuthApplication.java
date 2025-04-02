@@ -13,21 +13,17 @@ public class LoginAuthApplication {
         };
 
         public static void main(String[] args) {
-                try {
-                        Dotenv dotenv = Dotenv.configure().load();
+                Dotenv dotenv = Dotenv.configure().load();
 
-                        for (String var : REQUIRED_ENV_VARS) {
-                                String value = dotenv.get(var);
-                                if (value == null) {
-                                        throw new IllegalStateException("Variável faltando no .env: " + var);
-                                }
-                                System.setProperty(var, value);
+                for (String var : REQUIRED_ENV_VARS) {
+                        String value = dotenv.get(var);
+                        if (value == null) {
+                                throw new IllegalStateException("Variável faltando no .env: " + var);
                         }
-
-                        SpringApplication.run(LoginAuthApplication.class, args);
-                } catch (Exception exception) {
-                        exception.printStackTrace();
+                        System.setProperty(var, value);
                 }
+
+                SpringApplication.run(LoginAuthApplication.class, args);
         }
 
 }

@@ -2,6 +2,7 @@ package com.example.login_auth.controller;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,22 +29,26 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDto body) {
-        User user = this.userRepository.findByEmail(body.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Optional<User> userOpt = this.userRepository.findByEmail(body.email());
 
-        if (passwordEncoder.matches(user.getPassword(), body.password())) {
-            String token = this.tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDto(user, token));
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
 
-        return ResponseEntity.badRequest().build();
+        User user = userOpt.get();
+        if (!passwordEncoder.matches(body.password(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+        
+        String token = this.tokenService.generateToken(user);
+        return ResponseEntity.ok(new ResponseDto(user, token));
     }
 
     @PostMapping("/register")
-    public ResponseEntity login(@RequestBody RegisterRequestDto body) {
+    public ResponseEntity register(@RequestBody RegisterRequestDto body) {
         Optional<User> user = this.userRepository.findByEmail(body.email());
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             User newUser = new User();
             newUser.setPassword(passwordEncoder.encode(body.password()));
             newUser.setEmail(body.email());
@@ -51,10 +56,8 @@ public class AuthController {
             this.userRepository.save(newUser);
 
             String token = this.tokenService.generateToken(newUser);
-
             return ResponseEntity.ok(new ResponseDto(newUser, token));
         }
-
         return ResponseEntity.badRequest().build();
     }
 }
