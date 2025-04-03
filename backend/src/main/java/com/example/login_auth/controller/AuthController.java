@@ -1,10 +1,12 @@
 package com.example.login_auth.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import com.example.login_auth.dto.RegisterRequestDto;
 import com.example.login_auth.dto.ResponseDto;
 import com.example.login_auth.infra.security.TokenService;
 import com.example.login_auth.repositories.UserRepository;
+import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +31,17 @@ public class AuthController {
     private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDto body) {
+    public ResponseEntity login(@RequestBody LoginRequestDto body, BindingResult result) {
         Optional<User> userOpt = this.userRepository.findByEmail(body.email());
+
+        if (result.hasErrors()) {
+            List<Map<String, String>> errors = result.getFieldErrors().stream()
+                    .map(error -> Map.of(
+                            "field", error.getField(),
+                            "message", error.getDefaultMessage()))
+                    .toList();
+            return ResponseEntity.badRequest().body(errors);
+        }
 
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
@@ -45,8 +57,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDto body) {
+    public ResponseEntity register(@RequestBody RegisterRequestDto body, BindingResult result) {
         Optional<User> user = this.userRepository.findByEmail(body.email());
+
+        if (result.hasErrors()) {
+            List<Map<String, String>> errors = result.getFieldErrors().stream()
+                    .map(error -> Map.of(
+                            "field", error.getField(),
+                            "message", error.getDefaultMessage()))
+                    .toList();
+            return ResponseEntity.badRequest().body(errors);
+        }
 
         if (user.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already registered");
