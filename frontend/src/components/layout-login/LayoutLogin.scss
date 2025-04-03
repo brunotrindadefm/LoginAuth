@@ -30,8 +30,14 @@
         }
     }
 
-    .register {
-        margin-top: .2rem;
+    .register-link {
+        margin-top: .7rem;
         cursor: pointer;
+    }
+
+    .error-message {
+        display: block;
+        color: red;
+        font-size: 0.8rem;
     }
 }

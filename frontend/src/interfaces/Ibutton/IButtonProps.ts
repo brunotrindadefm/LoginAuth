@@ -1,4 +1,4 @@
 export interface IButtonProps {
     buttonText: string
-    onClick: () => void
+    type: 'button' | 'submit' | 'reset' | undefined
 }

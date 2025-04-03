@@ -23,8 +23,7 @@
 @mixin container-input {
     flex-direction: column;
     width: 100%;
-    margin: 2rem 0 1rem 0;
-    gap: 2rem;
+    margin-top: 1rem;
 }
 
 @mixin div-input {
@@ -32,6 +31,7 @@
     width: 90%;
     border-bottom: .1rem solid variables.$light-grey;
     padding-bottom: .5rem;
+    margin: 2rem 0 .4rem 0;
 }
 
 @mixin login-text-title {

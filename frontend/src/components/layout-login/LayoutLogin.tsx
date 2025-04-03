@@ -9,29 +9,37 @@ import { ILayoutLoginProps } from '../../interfaces/Ilayouts/ILayoutLoginProps';
 import { motion } from 'framer-motion';
 import theme from '../../styles/theme';
 import axios from 'axios';
+import { useLoginForm } from '../../hooks/useAuthForm';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
 
+    const { login } = useAuth();
+    const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
-
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const {
+        handleSubmit,
+        formState: { errors },
+        setValue
+    } = useLoginForm();
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const handleLogin = async () => {
+    const onSubmit = async (data: any) => {
         try {
-            const response = await axios.post(`${API_URL}/auth/login`, { email, password }, {
+            const response = await axios.post(`${API_URL}/auth/login`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log(response);
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.log(error.response?.data?.message || 'Erro ao fazer login');
-            } else {
-                console.log('Erro desconhecido');
-            }
+            login(response.data.token);
+            navigate('/home');
+        } catch (error: any) {
+            if (error.response?.status === 401)
+                setErrorMessage("Incorrect E-mail or Password");
+            else
+                setErrorMessage('Intern error on server');
         }
     }
 
@@ -49,13 +57,16 @@ const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
                 <h1>BTAuth</h1>
             </header>
             <h2>Login</h2>
-            <div className='container-input'>
+            <form className='container-input' onSubmit={handleSubmit(onSubmit)}>
                 <div>
-                    <Input type='text' placeholder='Username' onChangeValue={setEmail} />
+                    <Input type='email' placeholder='Email' onChangeValue={(value) => setValue("email", value)} />
                     <FaRegUser size={20} />
                 </div>
+                {errors.email && (
+                    <span className="error-message">{errors.email.message}</span>
+                )}
                 <div>
-                    <Input type={showPassword ? 'text' : 'password'} placeholder='Password' onChangeValue={setPassword} />
+                    <Input type={showPassword ? 'text' : 'password'} placeholder='Password' onChangeValue={(value) => setValue("password", value)} />
                     <span onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ?
                             <IoEyeOutline size={21} />
@@ -64,9 +75,16 @@ const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
                         }
                     </span>
                 </div>
-            </div>
-            <Button buttonText='Login' onClick={handleLogin} />
-            <span className='register' onClick={onToggleRegister}>Register</span>
+                {errors.password && (
+                    <span className="error-message">{errors.password.message}</span>
+                )}
+                {
+                    errorMessage &&
+                    <span className='error-message'>{errorMessage}</span>
+                }
+                <Button buttonText='Login' type='submit' />
+            </form>
+            <span className='register-link' onClick={onToggleRegister}>Register</span>
         </motion.div>
     );
 }

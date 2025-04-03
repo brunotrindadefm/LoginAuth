@@ -10,32 +10,43 @@ import { MdOutlineEmail } from "react-icons/md";
 import { motion } from "framer-motion";
 import theme from '../../styles/theme';
 import axios from 'axios';
+import { registerSchema } from '../../schemas/auth.schemas';
+import { useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) => {
 
+    const navigate = useNavigate();
+    const { login } = useAuth()
     const API_URL = import.meta.env.VITE_API_URL;
-
-    const [username, setUsername] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const {
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm({
+        resolver: zodResolver(registerSchema),
+        mode: "onChange"
+    });
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const handleRegister = async () => {
-        if (password !== confirmPassword) {
-            console.log("Passwords do not match");
-            return;
-        }
+    const onSubmit = async (data: any) => {
         try {
-            const response = await axios.post(`${API_URL}/auth/register`, { name: username, email, password }, {
+            const response = await axios.post(`${API_URL}/auth/register`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log(response);
-        } catch (error) {
-            console.log(error);
+            login(response.data.token);
+            navigate('/home')
+        } catch (error: any) {
+            if (error.response?.status === 400)
+                setErrorMessage("User already exists");
+            else
+                setErrorMessage('Intern error on server');
         }
     }
 
@@ -53,41 +64,71 @@ const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) =>
                     <h1>BTAuth</h1>
                 </header>
                 <h2>Register</h2>
-                <div className='container-input'>
+                <form className='container-input' onSubmit={handleSubmit(onSubmit)}>
                     <div>
-                        <Input type='text' placeholder='Username' onChangeValue={setUsername} />
-                        <FaRegUser size={20} />
+                        <Input
+                            type='text'
+                            placeholder='Username'
+                            onChangeValue={(value) => setValue("name", value)}
+                        />
+                        <FaRegUser size={20} className="input-icon" />
                     </div>
+                    {errors.name && (
+                        <span className="error-message">{errors.name.message}</span>
+                    )}
                     <div>
-                        <Input type='email' placeholder='Email' onChangeValue={setEmail} />
-                        <MdOutlineEmail size={20} />
+                        <Input
+                            type='email'
+                            placeholder='Email'
+                            onChangeValue={(value) => setValue("email", value)}
+                        />
+                        <MdOutlineEmail size={20} className="input-icon" />
                     </div>
+                    {errors.email && (
+                        <span className="error-message">{errors.email.message}</span>
+                    )}
                     <div>
-                        <Input type={showPassword ? 'text' : 'password'} placeholder='Password' onChangeValue={setPassword} />
-                        <span onClick={() => setShowPassword(!showPassword)}>
-                            {showPassword ?
-                                <IoEyeOutline size={21} />
-                                :
-                                <IoEyeOffOutline size={21} />
-                            }
+                        <Input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder='Password'
+                            onChangeValue={(value) => setValue("password", value)}
+                        />
+                        <span
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="password-toggle"
+                        >
+                            {showPassword ? <IoEyeOutline size={21} /> : <IoEyeOffOutline size={21} />}
                         </span>
                     </div>
+                    {errors.password && (
+                        <span className="error-message">{errors.password.message}</span>
+                    )}
                     <div>
-                        <Input type={showConfirmPassword ? 'text' : 'password'} placeholder='Confirm Password' onChangeValue={setConfirmPassword} />
-                        <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                            {showConfirmPassword ?
-                                <IoEyeOutline size={21} />
-                                :
-                                <IoEyeOffOutline size={21} />
-                            }
+                        <Input
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            placeholder='Confirm Password'
+                            onChangeValue={(value) => setValue("confirmPassword", value)}
+                        />
+                        <span
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="password-toggle"
+                        >
+                            {showConfirmPassword ? <IoEyeOutline size={21} /> : <IoEyeOffOutline size={21} />}
                         </span>
                     </div>
-                </div>
-                <Button buttonText='Register' onClick={handleRegister} />
-                <span className='login' onClick={onToggleRegister}>Login</span>
+                    {errors.confirmPassword && (
+                        <span className="error-message">{errors.confirmPassword.message}</span>
+                    )}
+                    {
+                        errorMessage &&
+                        <span>{errorMessage}</span>
+                    }
+                    <Button buttonText='Register' type='submit' />
+                </form>
+                <span className='login-link' onClick={onToggleRegister}>Login</span>
             </motion.div>
         </>
     )
 }
 
-export default LayoutRegister
+export default LayoutRegister;
