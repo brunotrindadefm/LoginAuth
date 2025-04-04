@@ -36,8 +36,6 @@
     }
 
     .error-message {
-        display: block;
-        color: red;
-        font-size: 0.8rem;
+        @include mixins.error-message;
     }
 }

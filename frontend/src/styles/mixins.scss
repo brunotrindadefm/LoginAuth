@@ -40,3 +40,9 @@
     margin-left: .2rem;
     margin-top: .4rem;
 }
+
+@mixin error-message {
+    display: block;
+    color: red;
+    font-size: 0.8rem;
+}
