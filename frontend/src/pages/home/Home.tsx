@@ -1,8 +1,7 @@
+import WelcomeContainer from "../../components/welcome-container/WelcomeContainer"
 
 const Home = () => {
-    return (
-        <h2>To na home</h2>
-    )
+    return  <WelcomeContainer />;
 }
 
 export default Home

@@ -1,0 +1,11 @@
+@use '../../styles/mixins.scss';
+@use '../../styles/variables.scss';
+
+.welcome-container {
+    @include mixins.flex-center;
+    flex-direction: column;
+
+    h2 {
+        color: variables.$ice-white;
+    }
+}

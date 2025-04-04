@@ -41,7 +41,11 @@ const LayoutRegister: React.FC<ILayoutRegisterProps> = ({ onToggleRegister }) =>
                 },
             });
             login(response.data.token);
-            navigate('/home')
+            navigate('/home', {
+                state: {
+                    user: response.data.user,
+                }
+            })
         } catch (error: any) {
             if (error.response?.status === 400)
                 setErrorMessage("User already exists");

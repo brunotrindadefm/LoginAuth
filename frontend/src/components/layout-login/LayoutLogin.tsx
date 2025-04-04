@@ -34,7 +34,11 @@ const LayoutLogin: React.FC<ILayoutLoginProps> = ({ onToggleRegister }) => {
                 },
             });
             login(response.data.token);
-            navigate('/home');
+            navigate('/home', {
+                state: {
+                    user: response.data.user,
+                }
+            })
         } catch (error: any) {
             if (error.response?.status === 401)
                 setErrorMessage("Incorrect E-mail or Password");
